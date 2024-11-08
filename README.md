@@ -1,5 +1,10 @@
 # Cintel-06-custom
-Module 6 custom project
+Module 6 custom project for Continuous Intelligence 
 
-# Files Uploaded
-tips.csv to be used in app.py file
+# Icons
+Icons are imported from faicons
+
+# Reactive Calculations
+Reactive calculations are coded at the bottom of the app.py file
+
+
