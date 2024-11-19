@@ -48,8 +48,9 @@ with ui.sidebar(open="open"):
     ui.input_selectize("selected_y_attribute","Select Y Attribute",
                       ["total_bill","smoker","day","time","size","tip"],selected=["tip"])
     
-    #slider to select bill amount (this one is not interactive with tables or charts)
-    ui.input_slider("total_bill_amount","Select Total Bill",0.00,50.00,0.01)
+    #slider to select bill amount (this one is not interactive with tables or charts) 
+    #The Double ended slider was based off of code recommended to me by Phillip Fowler
+    ui.input_slider("total_bill_amount","Select Total Bill",min=0.00,max=50.00,value=[3.00,50.00],step=0.01)
 
 
 
@@ -96,7 +97,7 @@ with ui.layout_columns(fill=False):
         "Tipping Data table"
         @render.data_frame
         def tipping_df():
-            return render.DataTable(filtered_dining_time(),selection_mode='row')
+            return render.DataTable(filtered_tips_and_gender(),selection_mode='row')
     
     #Scatter graph of total bill vs total tip---------------------------
     with ui.card(full_screen=True):
@@ -204,7 +205,14 @@ def filtered_gender():
     req(input.selected_gender())
     isGenderMatch=tips["sex"].isin(input.selected_gender())
     return tips[isGenderMatch]
+    
+def filtered_tips_and_gender():
+    filt_df = tips[tips["time"].isin(input.selected_dining_time())]
+    filt_df=filt_df[filt_df['sex'].isin(input.selected_gender())]
+    filt_df=filt_df[filt_df['total_bill'].between(input.total_bill_amount()[0], input.total_bill_amount()[1])]
+    return filt_df
 
+    
 def reactive_tips_combined():
     reactive.invalidate_later(UPDATE_INTERVAL_SECS) #Invalidate to trigger updates
     #DATA GENERATION
